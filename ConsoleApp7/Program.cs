@@ -115,7 +115,7 @@ class Program
         Console.WriteLine("Пароль: ");
         string password = Console.ReadLine();
 
-        Console.WriteLine("Дата народження (рррр-мм-дд): ");
+        Console.WriteLine("Дата народження: ");
         DateTime birth;
         DateTime.TryParse(Console.ReadLine(), out birth);
 
