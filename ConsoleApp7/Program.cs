@@ -157,36 +157,16 @@ class Program
         Console.WriteLine("1. Iсторiя");
         Console.WriteLine("2. Географiя");
         Console.WriteLine("3. Бiологiя");
-        Console.WriteLine("4. Змiшана");
         Console.WriteLine("Ваш вибiр: ");
         string cat = Console.ReadLine();
 
         List<Question> selected = new List<Question>();
 
-        if (cat == "4")
-        {
-            List<Question> allQ = new List<Question>();
-            for (int i = 0; i < quizzes.Count; i++)
-            {
-                for (int j = 0; j < quizzes[i].Questions.Count; j++)
-                {
-                    allQ.Add(quizzes[i].Questions[j]);
-                }
-            }
-
-            while (selected.Count < 20 && allQ.Count > 0)
-            {
-                int k = rnd.Next(allQ.Count);
-                selected.Add(allQ[k]);
-                allQ.RemoveAt(k);
-            }
-        }
-        else
-        {
-            string category = "";
-            if (cat == "1") category = "Iсторiя";
-            else if (cat == "2") category = "Географiя";
-            else if (cat == "3") category = "Бiологiя";
+        
+        
+            if (cat == "1") {category = "Iсторiя"}
+            else if (cat == "2"){ category = "Географiя"}
+            else if (cat == "3") {category = "Бiологiя"}
 
             for (int i = 0; i < quizzes.Count; i++)
             {
@@ -199,7 +179,7 @@ class Program
                     }
                 }
             }
-        }
+        
 
         if (selected.Count == 0)
         {
