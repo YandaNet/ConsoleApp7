@@ -1,42 +1,43 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 class User
 {
     public string Login;
     public string Password;
-    public DateTime BirthDate;
+    public DateTime Birth;
 }
 
 class Question
 {
     public string Text;
     public List<string> Options;
-    public List<int> CorrectIndices;
+    public List<int> CorAnsv;
 
     public Question()
     {
         Options = new List<string>();
-        CorrectIndices = new List<int>();
+        CorAnsv = new List<int>();
     }
 }
 
-class Quiz
+class Test
 {
-    public string Title;
+    public string Name;
     public string Category;
     public List<Question> Questions;
 
-    public Quiz()
+    public Test()
     {
         Questions = new List<Question>();
+        
     }
 }
 
 class Result
 {
     public string UserLogin;
-    public string QuizTitle;
+    public string TestTitle;
     public int Score;
     public DateTime Date;
 
@@ -48,49 +49,57 @@ class Result
 
 class Program
 {
+
+
+
+
     static List<User> users = new List<User>();
-    static List<Quiz> quizzes = new List<Quiz>();
+    static List<Test> tests = new List<Test>();
     static List<Result> results = new List<Result>();
-    static User currentUser = null;
+    static User usernow = null;
     static Random rnd = new Random();
 
     static void Main()
     {
-        InitQuizzes();
+        Questions();
 
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("=== ВIКТОРИНА ===");
+            Console.WriteLine("Навчальні тести");
 
-            if (currentUser == null)
+            if (usernow == null)
             {
                 Console.WriteLine("1. Увiйти");
                 Console.WriteLine("2. Зареєструватись");
                 Console.WriteLine("0. Вихiд");
                 Console.Write("Вибір: ");
-                string c = Console.ReadLine();
+                string ask = Console.ReadLine();
 
-                if (c == "1") Login();
-                else if (c == "2") Register();
-                else if (c == "0") break;
+                if (ask == "1") Login();
+                else if (ask == "2") Register();
+                else if (ask == "0") break;
             }
+            
             else
             {
-                Console.WriteLine("Вiтаю, " + currentUser.Login + "!");
-                Console.WriteLine("1. Нова вiкторина");
-                Console.WriteLine("2. Мої результати");
-                Console.WriteLine("3. Топ-20 по вiкторинi");
-                Console.WriteLine("4. Вийти з акаунту");
+                Console.WriteLine("Вiтаю, " + usernow.Login + "!");
+                Console.WriteLine("1. Новий тест");
+                Console.WriteLine("2. Мої тести");
+                Console.WriteLine("3. Топ 20");
+                Console.WriteLine("4. Вийти");
                 Console.WriteLine("0. Вихiд з програми");
                 Console.Write("Вибiр: ");
-                string c = Console.ReadLine();
+                string ask = Console.ReadLine();
 
-                if (c == "1") StartNewQuiz();
-                else if (c == "2") ShowMyResults();
-                else if (c == "3") ShowTop20();
-                else if (c == "4") currentUser = null;
-                else if (c == "0") break;
+
+
+
+                if (ask == "1") NewTest();
+                else if (ask == "2") MyResult();
+                else if (ask == "3") Top20();
+                else if (ask == "4") usernow = null;
+                else if (ask == "0") break;
             }
         }
 
@@ -106,7 +115,7 @@ class Program
         {
             if (users[i].Login == login)
             {
-                Console.WriteLine("Такий користувач вже iснує!");
+                Console.WriteLine("вже iснує!");
                 Console.ReadKey();
                 return;
             }
@@ -122,7 +131,7 @@ class Program
         User u = new User();
         u.Login = login;
         u.Password = password;
-        u.BirthDate = birth;
+        u.Birth = birth;
         users.Add(u);
 
         Console.WriteLine("Реєстрація успiшна!");
@@ -140,7 +149,7 @@ class Program
         {
             if (users[i].Login == login && users[i].Password == password)
             {
-                currentUser = users[i];
+                usernow = users[i];
                 Console.WriteLine("Вхiд виконано!");
                 Console.ReadKey();
                 return;
@@ -151,9 +160,13 @@ class Program
         Console.ReadKey();
     }
 
-    static void StartNewQuiz()
+
+
+
+    //newtest
+    static void NewTest()
     {
-        Console.WriteLine("=== Виберiть роздiл ===");
+        Console.WriteLine("Розділ:");
         Console.WriteLine("1. Iсторiя");
         Console.WriteLine("2. Географiя");
         Console.WriteLine("3. Бiологiя");
@@ -161,25 +174,35 @@ class Program
         string cat = Console.ReadLine();
 
         List<Question> selected = new List<Question>();
+        Test quiz = new Test();
+        string category = quiz.Category;
 
-        
-        
-            if (cat == "1") {category = "Iсторiя"}
-            else if (cat == "2"){ category = "Географiя"}
-            else if (cat == "3") {category = "Бiологiя"}
 
-            for (int i = 0; i < quizzes.Count; i++)
+        if (cat == "1")  
+        {
+            category = "Iсторiя";
+        }
+        else if (cat == "2")
+        { 
+            category = "Географiя"; 
+        }
+        else if (cat == "3") 
+        { 
+            category = "Бiологiя";
+        }
+
+        for (int i = 0; i < tests.Count; i++)
+        {
+            if (tests[i].Category == category)
             {
-                if (quizzes[i].Category == category)
+                for (int j = 0; j < tests[i].Questions.Count; j++)
                 {
-                    for (int j = 0; j < quizzes[i].Questions.Count; j++)
-                    {
-                        if (selected.Count < 20)
-                            selected.Add(quizzes[i].Questions[j]);
-                    }
+                    if (selected.Count < 20)
+                        selected.Add(tests[i].Questions[j]);
                 }
             }
-        
+        }
+
 
         if (selected.Count == 0)
         {
@@ -210,14 +233,15 @@ class Program
                 }
             }
 
+
             bool correct = true;
-            if (chosen.Count != selected[i].CorrectIndices.Count)
+            if (chosen.Count != selected[i].CorAnsv.Count)
                 correct = false;
             else
             {
-                for (int j = 0; j < selected[i].CorrectIndices.Count; j++)
+                for (int j = 0; j < selected[i].CorAnsv.Count; j++)
                 {
-                    if (!chosen.Contains(selected[i].CorrectIndices[j]))
+                    if (!chosen.Contains(selected[i].CorAnsv[j]))
                         correct = false;
                 }
             }
@@ -227,18 +251,22 @@ class Program
 
 
         Result r = new Result();
-        r.UserLogin = currentUser.Login;
-        r.QuizTitle = (cat == "4") ? "Змiшана" : "Категорiя " + cat;
+        r.UserLogin = usernow.Login;
         r.Score = score;
         results.Add(r);
+
+
 
 
         List<Result> same = new List<Result>();
         for (int i = 0; i < results.Count; i++)
         {
-            if (results[i].QuizTitle == r.QuizTitle)
+            if (results[i].TestTitle == r.TestTitle)
                 same.Add(results[i]);
         }
+
+
+
 
         for (int i = 0; i < same.Count - 1; i++)
         {
@@ -253,7 +281,13 @@ class Program
             }
         }
 
+
+
+
+
         int place = -1;
+
+
         for (int i = 0; i < same.Count; i++)
         {
             if (same[i] == r) place = i + 1;
@@ -264,20 +298,32 @@ class Program
         Console.ReadKey();
     }
 
-    static void ShowMyResults()
+
+
+
+
+
+
+    //resultat
+    static void MyResult()
     {
         Console.WriteLine("=== Мої результати ===");
         for (int i = 0; i < results.Count; i++)
         {
-            if (results[i].UserLogin == currentUser.Login)
+            if (results[i].UserLogin == usernow.Login)
             {
-                Console.WriteLine(results[i].QuizTitle + " - " + results[i].Score + " балiв (" + results[i].Date + ")");
+                Console.WriteLine(results[i].TestTitle + " - " + results[i].Score + " балiв (" + results[i].Date + ")");
             }
         }
         Console.ReadKey();
     }
 
-    static void ShowTop20()
+
+
+
+
+    //top20
+    static void Top20()
     {
         Console.WriteLine("Назва вiкторини: ");
         string title = Console.ReadLine();
@@ -285,7 +331,7 @@ class Program
         List<Result> list = new List<Result>();
         for (int i = 0; i < results.Count; i++)
         {
-            if (results[i].QuizTitle == title)
+            if (results[i].TestTitle == title)
             {
                 list.Add(results[i]);
             }
@@ -307,15 +353,15 @@ class Program
         Console.WriteLine("=== Топ-20 ===");
         int limit;
 
-     
+
         if (list.Count < 20)
         {
-          limit = list.Count;
+            limit = list.Count;
         }
         else
-{
-    limit = 20;
-}
+        {
+            limit = 20;
+        }
 
         for (int i = 0; i < limit; i++)
         {
@@ -326,10 +372,14 @@ class Program
 
 
 
-    static void InitQuizzes()
+    static void Questions()
     {
-        Quiz history = new Quiz();
-        history.Title = "Iсторiя базова";
+
+
+
+        //history
+        Test history = new Test();
+        history.Name = "Iсторiя базова";
         history.Category = "Iсторiя";
 
         Question h1 = new Question();
@@ -337,7 +387,7 @@ class Program
         h1.Options.Add("Олег");
         h1.Options.Add("Володимир Великий");
         h1.Options.Add("Ярослав Мудрий");
-        h1.CorrectIndices.Add(0);
+        h1.CorAnsv.Add(0);
         history.Questions.Add(h1);
 
         Question h2 = new Question();
@@ -345,7 +395,7 @@ class Program
         h2.Options.Add("1939");
         h2.Options.Add("1941");
         h2.Options.Add("1945");
-        h2.CorrectIndices.Add(0);
+        h2.CorAnsv.Add(0);
         history.Questions.Add(h2);
 
         Question h3 = new Question();
@@ -353,7 +403,7 @@ class Program
         h3.Options.Add("Римська");
         h3.Options.Add("Османська");
         h3.Options.Add("Візантійська");
-        h3.CorrectIndices.Add(0);
+        h3.CorAnsv.Add(0);
         history.Questions.Add(h3);
 
         Question h4 = new Question();
@@ -361,7 +411,7 @@ class Program
         h4.Options.Add("Джеймс Медісон");
         h4.Options.Add("Бенджамін Франклін");
         h4.Options.Add("Джордж Вашингтон");
-        h4.CorrectIndices.Add(0);
+        h4.CorAnsv.Add(0);
         history.Questions.Add(h4);
 
         Question h5 = new Question();
@@ -369,13 +419,20 @@ class Program
         h5.Options.Add("1918");
         h5.Options.Add("1920");
         h5.Options.Add("1932");
-        h5.CorrectIndices.Add(0);
+        h5.CorAnsv.Add(0);
         history.Questions.Add(h5);
 
-        quizzes.Add(history);
+        tests.Add(history);
 
-        Quiz geo = new Quiz();
-        geo.Title = "Географiя базова";
+
+
+
+
+
+
+        //geo
+        Test geo = new Test();
+        geo.Name = "Географiя базова";
         geo.Category = "Географiя";
 
         Question g1 = new Question();
@@ -383,7 +440,7 @@ class Program
         g1.Options.Add("Мертве море");
         g1.Options.Add("Червоне море");
         g1.Options.Add("Каспійське море");
-        g1.CorrectIndices.Add(0);
+        g1.CorAnsv.Add(0);
         geo.Questions.Add(g1);
 
         Question g2 = new Question();
@@ -391,7 +448,7 @@ class Program
         g2.Options.Add("Бразиліа");
         g2.Options.Add("Ріо-де-Жанейро");
         g2.Options.Add("Сан-Паулу");
-        g2.CorrectIndices.Add(0);
+        g2.CorAnsv.Add(0);
         geo.Questions.Add(g2);
 
         Question g3 = new Question();
@@ -399,7 +456,7 @@ class Program
         g3.Options.Add("Австралія");
         g3.Options.Add("Європа");
         g3.Options.Add("Антарктида");
-        g3.CorrectIndices.Add(0);
+        g3.CorAnsv.Add(0);
         geo.Questions.Add(g3);
 
         Question g4 = new Question();
@@ -407,7 +464,7 @@ class Program
         g4.Options.Add("Китай");
         g4.Options.Add("Індія");
         g4.Options.Add("США");
-        g4.CorrectIndices.Add(0);
+        g4.CorAnsv.Add(0);
         geo.Questions.Add(g4);
 
         Question g5 = new Question();
@@ -415,13 +472,23 @@ class Program
         g5.Options.Add("Чикаго");
         g5.Options.Add("Лондон");
         g5.Options.Add("Токіо");
-        g5.CorrectIndices.Add(0);
+        g5.CorAnsv.Add(0);
         geo.Questions.Add(g5);
 
-        quizzes.Add(geo);
+        tests.Add(geo);
 
-        Quiz bio = new Quiz();
-        bio.Title = "Бiологiя базова";
+
+
+
+
+
+
+
+
+
+        //biology
+        Test bio = new Test();
+        bio.Name = "Бiологiя базова";
         bio.Category = "Бiологiя";
 
         Question b1 = new Question();
@@ -429,7 +496,7 @@ class Program
         b1.Options.Add("ДНК");
         b1.Options.Add("РНК");
         b1.Options.Add("Білок");
-        b1.CorrectIndices.Add(0);
+        b1.CorAnsv.Add(0);
         bio.Questions.Add(b1);
 
         Question b2 = new Question();
@@ -437,7 +504,7 @@ class Program
         b2.Options.Add("Підшлункова залоза");
         b2.Options.Add("Печінка");
         b2.Options.Add("Нирки");
-        b2.CorrectIndices.Add(0);
+        b2.CorAnsv.Add(0);
         bio.Questions.Add(b2);
 
         Question b3 = new Question();
@@ -445,7 +512,7 @@ class Program
         b3.Options.Add("206");
         b3.Options.Add("208");
         b3.Options.Add("210");
-        b3.CorrectIndices.Add(0);
+        b3.CorAnsv.Add(0);
         bio.Questions.Add(b3);
 
         Question b4 = new Question();
@@ -453,7 +520,7 @@ class Program
         b4.Options.Add("Око");
         b4.Options.Add("Вухо");
         b4.Options.Add("Мозок");
-        b4.CorrectIndices.Add(0);
+        b4.CorAnsv.Add(0);
         bio.Questions.Add(b4);
 
         Question b5 = new Question();
@@ -461,10 +528,10 @@ class Program
         b5.Options.Add("Амеба");
         b5.Options.Add("Людина");
         b5.Options.Add("Риба");
-        b5.CorrectIndices.Add(0);
+        b5.CorAnsv.Add(0);
         bio.Questions.Add(b5);
 
-        quizzes.Add(bio);
+        tests.Add(bio);
     }
 
 
