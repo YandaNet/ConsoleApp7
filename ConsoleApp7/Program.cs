@@ -1,12 +1,22 @@
 using System;
 using System.Collections.Generic;
 
+
+
+
+
 class User
 {
     public string Login;
     public string Password;
     public DateTime Birth;
 }
+
+
+
+
+
+
 
 class Question
 {
@@ -18,8 +28,15 @@ class Question
     {
         Options = new List<string>();
         CorAnsv = new List<int>();
+   
+    
     }
 }
+
+
+
+
+
 
 class Test
 {
@@ -59,9 +76,19 @@ class Program
     static User usernow = null;
     static Random rnd = new Random();
 
+    
+
+
+
     static void Main()
     {
         Questions();
+
+
+
+
+
+
 
         while (true)
         {
@@ -166,27 +193,25 @@ class Program
     //newtest
     static void NewTest()
     {
-        Console.WriteLine("Розділ:");
-        Console.WriteLine("1. Iсторiя");
-        Console.WriteLine("2. Географiя");
-        Console.WriteLine("3. Бiологiя");
+        Console.WriteLine("Розділ: 1 Історія, 2 Географія, 3 Біологія");
         Console.WriteLine("Ваш вибiр: ");
-        string cat = Console.ReadLine();
+        string Choice = Console.ReadLine();
 
         List<Question> selected = new List<Question>();
-        Test quiz = new Test();
-        string category = quiz.Category;
+        Test test = new Test();
+        string category = test.Category;
 
 
-        if (cat == "1")  
+
+        if (Choice == "1")  
         {
             category = "Iсторiя";
         }
-        else if (cat == "2")
+        else if (Choice == "2")
         { 
             category = "Географiя"; 
         }
-        else if (cat == "3") 
+        else if (Choice == "3") 
         { 
             category = "Бiологiя";
         }
@@ -214,6 +239,7 @@ class Program
         int score = 0;
         for (int i = 0; i < selected.Count; i++)
         {
+             bool Answer = true;
             Console.Clear();
             Console.WriteLine("Питання " + (i + 1) + ": " + selected[i].Text);
             for (int j = 0; j < selected[i].Options.Count; j++)
@@ -232,40 +258,30 @@ class Program
                     chosen.Add(x - 1);
                 }
             }
-
-
-            bool correct = true;
             if (chosen.Count != selected[i].CorAnsv.Count)
-                correct = false;
+                Answer = false;
             else
             {
                 for (int j = 0; j < selected[i].CorAnsv.Count; j++)
                 {
                     if (!chosen.Contains(selected[i].CorAnsv[j]))
-                        correct = false;
+                        Answer = false;
                 }
             }
-
-            if (correct) score++;
+            if (Answer) score++;
         }
-
-
-        Result r = new Result();
-        r.UserLogin = usernow.Login;
-        r.Score = score;
-        results.Add(r);
-
-
+        Result user = new Result();
+        user.UserLogin = usernow.Login;
+        user.Score = score;
+        results.Add(user);
 
 
         List<Result> same = new List<Result>();
         for (int i = 0; i < results.Count; i++)
         {
-            if (results[i].TestTitle == r.TestTitle)
+            if (results[i].TestTitle == user.TestTitle)
                 same.Add(results[i]);
         }
-
-
 
 
         for (int i = 0; i < same.Count - 1; i++)
@@ -282,15 +298,12 @@ class Program
         }
 
 
-
-
-
         int place = -1;
 
 
         for (int i = 0; i < same.Count; i++)
         {
-            if (same[i] == r) place = i + 1;
+            if (same[i] == user) place = i + 1;
         }
 
         Console.WriteLine("Ваш результат: " + score + " з " + selected.Count);
@@ -350,7 +363,7 @@ class Program
             }
         }
 
-        Console.WriteLine("=== Топ-20 ===");
+        Console.WriteLine("Топ-20");
         int limit;
 
 
@@ -379,7 +392,7 @@ class Program
 
         //history
         Test history = new Test();
-        history.Name = "Iсторiя базова";
+        history.Name = "Iсторiя";
         history.Category = "Iсторiя";
 
         Question h1 = new Question();
@@ -432,7 +445,7 @@ class Program
 
         //geo
         Test geo = new Test();
-        geo.Name = "Географiя базова";
+        geo.Name = "Географiя";
         geo.Category = "Географiя";
 
         Question g1 = new Question();
@@ -488,7 +501,7 @@ class Program
 
         //biology
         Test bio = new Test();
-        bio.Name = "Бiологiя базова";
+        bio.Name = "Бiологiя";
         bio.Category = "Бiологiя";
 
         Question b1 = new Question();
