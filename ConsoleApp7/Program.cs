@@ -325,7 +325,18 @@ class Program
         }
 
         Console.WriteLine("=== Топ-20 ===");
-        int limit = list.Count < 20 ? list.Count : 20;
+        int limit;
+
+     
+        if (list.Count < 20)
+        {
+          limit = list.Count;
+        }
+        else
+{
+    limit = 20;
+}
+
         for (int i = 0; i < limit; i++)
         {
             Console.WriteLine((i + 1) + ". " + list[i].UserLogin + " - " + list[i].Score);
