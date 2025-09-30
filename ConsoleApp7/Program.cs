@@ -97,9 +97,8 @@ class Program
 
             if (usernow == null)
             {
-                Console.WriteLine("1. Увiйти");
-                Console.WriteLine("2. Зареєструватись");
-                Console.WriteLine("0. Вихiд");
+                Console.WriteLine("1. Увiйти, 2.Зареєструватись, 3.Вийти");
+
                 Console.Write("Вибір: ");
                 string ask = Console.ReadLine();
 
@@ -111,11 +110,7 @@ class Program
             else
             {
                 Console.WriteLine("Вiтаю, " + usernow.Login + "!");
-                Console.WriteLine("1. Новий тест");
-                Console.WriteLine("2. Мої тести");
-                Console.WriteLine("3. Топ 20");
-                Console.WriteLine("4. Вийти");
-                Console.WriteLine("0. Вихiд з програми");
+                Console.WriteLine("1. Новий тест, 2 пройдені тести, 3 топ 20, 4. Вийти, 0. Вихід");
                 Console.Write("Вибiр: ");
                 string ask = Console.ReadLine();
 
@@ -161,7 +156,7 @@ class Program
         u.Birth = birth;
         users.Add(u);
 
-        Console.WriteLine("Реєстрація успiшна!");
+        Console.WriteLine("yes!");
         Console.ReadKey();
     }
 
@@ -177,13 +172,13 @@ class Program
             if (users[i].Login == login && users[i].Password == password)
             {
                 usernow = users[i];
-                Console.WriteLine("Вхiд виконано!");
+                Console.WriteLine("Вірно");
                 Console.ReadKey();
                 return;
             }
         }
 
-        Console.WriteLine("Невiрний логiн або пароль.");
+        Console.WriteLine("Невiрно.");
         Console.ReadKey();
     }
 
@@ -307,7 +302,6 @@ class Program
         }
 
         Console.WriteLine("Ваш результат: " + score + " з " + selected.Count);
-        Console.WriteLine("Ваше мiсце у таблицi: " + place);
         Console.ReadKey();
     }
 
@@ -320,12 +314,12 @@ class Program
     //resultat
     static void MyResult()
     {
-        Console.WriteLine("=== Мої результати ===");
+        Console.WriteLine("результати");
         for (int i = 0; i < results.Count; i++)
         {
             if (results[i].UserLogin == usernow.Login)
             {
-                Console.WriteLine(results[i].TestTitle + " - " + results[i].Score + " балiв (" + results[i].Date + ")");
+                Console.WriteLine(results[i].TestTitle + " = " + results[i].Score + " балiв");
             }
         }
         Console.ReadKey();
